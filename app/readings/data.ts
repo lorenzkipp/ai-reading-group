@@ -306,7 +306,6 @@ export const readings: Record<string, Reading[]> = {
       title: 'The impact of AI and digital platforms on the information ecosystem',
       authors: 'J. E. Stiglitz & Màxim Ventura-Bolet',
       link: 'https://www.nber.org/system/files/chapters/c15317/c15317.pdf',
-      note: 'Models the impact on newspapers',
       venue: 'Working Paper',
       year: '2025',
     },
