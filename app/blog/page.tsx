@@ -6,6 +6,12 @@
 //   description: 'Notes, summaries, and announcements from the reading group.',
 // }
 
+import { notFound } from 'next/navigation'
+
+export default function Page() {
+  notFound()
+}
+
 // export default function Page() {
 //   return (
 //     <section>
