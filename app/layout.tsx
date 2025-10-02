@@ -11,15 +11,15 @@ import { baseUrl } from './sitemap'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'Next.js Portfolio Starter',
-    template: '%s | Next.js Portfolio Starter',
+    default: 'AI Reading Group',
+    template: '%s | AI Reading Group',
   },
-  description: 'This is my portfolio.',
+  description: 'Weekly PhD reading group: papers, schedule, and notes.',
   openGraph: {
-    title: 'My Portfolio',
-    description: 'This is my portfolio.',
+    title: 'AI Reading Group',
+    description: 'Weekly PhD reading group: papers, schedule, and notes.',
     url: baseUrl,
-    siteName: 'My Portfolio',
+    siteName: 'AI Reading Group',
     locale: 'en_US',
     type: 'website',
   },
@@ -36,7 +36,8 @@ export const metadata: Metadata = {
   },
 }
 
-const cx = (...classes) => classes.filter(Boolean).join(' ')
+const cx = (...classes: (string | false | null | undefined)[]) =>
+  classes.filter(Boolean).join(' ')
 
 export default function RootLayout({
   children,
@@ -46,13 +47,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning    // <— ignore extension-injected attrs like `nighteye`
       className={cx(
         'text-black bg-white dark:text-white dark:bg-black',
         GeistSans.variable,
         GeistMono.variable
       )}
     >
-      <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
+      <body
+        className="antialiased max-w-3xl mx-4 mt-8 lg:mx-auto"
+        suppressHydrationWarning   // optional extra guard
+      >
         <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
           <Navbar />
           {children}

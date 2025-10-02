@@ -1,61 +1,105 @@
-function ArrowIcon() {
+'use client'
+
+import { useEffect, useMemo, useRef, useState } from 'react'
+
+function TextLoop({ messages, interval = 4000 }: { messages: string[]; interval?: number }) {
+  const [curr, setCurr] = useState(0)
+  const [prev, setPrev] = useState<number | null>(null)
+  const timer = useRef<number | null>(null)
+
+  useEffect(() => {
+    // rotate
+    timer.current = window.setInterval(() => {
+      setPrev((p) => (p === null ? 0 : (p + 1) % messages.length))
+      setCurr((c) => (c + 1) % messages.length)
+    }, interval)
+    return () => {
+      if (timer.current) window.clearInterval(timer.current)
+    }
+  }, [messages.length, interval])
+
   return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M2.07102 11.3494L0.963068 10.2415L9.2017 1.98864H2.83807L2.85227 0.454545H11.8438V9.46023H10.2955L10.3097 3.09659L2.07102 11.3494Z"
-        fill="currentColor"
-      />
-    </svg>
+    <div className="relative h-5 overflow-hidden">
+      {/* current */}
+      <div key={curr} className="absolute inset-0 animate-fade-in-up will-change-transform">
+        {messages[curr]}
+      </div>
+      {/* previous (animates out) */}
+      {prev !== null && (
+        <div key={`prev-${prev}`} className="absolute inset-0 animate-fade-out-up will-change-transform">
+          {messages[prev]}
+        </div>
+      )}
+
+      {/* local styles (styled-jsx) */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOutUp {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-4px); }
+        }
+        .animate-fade-in-up { animation: fadeInUp 260ms ease-out forwards; }
+        .animate-fade-out-up { animation: fadeOutUp 260ms ease-in forwards; }
+      `}</style>
+    </div>
   )
 }
 
 export default function Footer() {
+  // Hydration-safe: don’t render dynamic time on the server.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  const year = useMemo(
+    () => (typeof window !== 'undefined' ? new Date().getFullYear() : null),
+    []
+  )
+
+  const rotating = mounted
+    ? [
+        `© ${year} AI Reading Group.`,
+        `Built with Next.js Portfolio Starter.`,
+      ]
+    : [`© AI Reading Group.`] // stable SSR placeholder
+
   return (
-    <footer className="mb-16">
-      <ul className="font-sm mt-8 flex flex-col space-x-0 space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300">
+    <footer className="mt-4">
+      {/* top links */}
+      <ul className="font-sm mb-6 flex flex-col space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300">
+        {/* <li>
+          <a
+            className="transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            href="mailto:reading-group@example.edu"
+          >
+            Contact
+          </a>
+        </li> */}
+        {/* Optional: expose an iCal feed once you add it
         <li>
           <a
-            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="/rss"
+            className="transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            href="/ics"
           >
-            <ArrowIcon />
-            <p className="ml-2 h-7">rss</p>
+            Add to Calendar (.ics)
           </a>
         </li>
-        <li>
-          <a
-            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://github.com/vercel/next.js"
-          >
-            <ArrowIcon />
-            <p className="ml-2 h-7">github</p>
-          </a>
-        </li>
-        <li>
-          <a
-            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://vercel.com/templates/next.js/portfolio-starter-kit"
-          >
-            <ArrowIcon />
-            <p className="ml-2 h-7">view source</p>
-          </a>
-        </li>
+        */}
       </ul>
-      <p className="mt-8 text-neutral-600 dark:text-neutral-300">
-        © {new Date().getFullYear()} MIT Licensed
-      </p>
+
+      {/* divider */}
+      <div className="border-t border-neutral-200 dark:border-neutral-800" />
+
+      {/* rotating credit line */}
+      <div
+        className="mt-3 text-xs text-neutral-500 dark:text-neutral-400"
+        aria-live="polite"
+        suppressHydrationWarning
+      >
+        <TextLoop messages={rotating} />
+      </div>
     </footer>
   )
 }
