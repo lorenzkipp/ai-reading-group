@@ -28,7 +28,4 @@ export const organizers: Person[] = [
 ]
 
 
-export const members: Person[] = [
-  { name: 'TBC', affiliation: 'Paris School of Economics' },
-  { name: 'TBC', affiliation: 'Sciences Po' },
-]
+export const members: Person[] = []
