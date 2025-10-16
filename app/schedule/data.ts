@@ -13,7 +13,7 @@ export type Meeting = {
 // example seed data — edit freely
 export const schedule: Meeting[] = [
   {
-    date: '2025-10-16',
+    date: '2025-10-23',
     time: '17:00–18:30',
     room: 'Room TBC',
     topic: 'Introductory Meeting',
