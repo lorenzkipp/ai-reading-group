@@ -80,7 +80,7 @@ export function Upcoming({ limit = 1 }: { limit?: number }) {
                       {/* assume labels are clean, e.g., 'Paper 1' */}
                       {l.label}
                     </a>
-                    {j < m.links.length - 1 ? ', ' : ''}
+                    {j < (m.links?.length ?? 0) - 1 ? ', ' : ''}
                   </span>
                 ))}
               </div>

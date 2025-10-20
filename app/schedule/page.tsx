@@ -56,7 +56,7 @@ export default function SchedulePage() {
                 >
                   {l.label}
                 </a>
-                {j < m.links.length - 1 ? ', ' : ''}
+                {j < (m.links?.length ?? 0) - 1 ? ', ' : ''}
               </span>
             ))}
           </div>
