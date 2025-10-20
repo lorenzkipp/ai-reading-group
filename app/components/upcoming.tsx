@@ -45,55 +45,61 @@ export function Upcoming({ limit = 1 }: { limit?: number }) {
   }
 
   return (
-    <ul className="mt-6">
-      {items.map((m, i) => (
-        <li key={`${m.date}-${i}`} className="relative pl-10 py-4">
-          {/* timeline styling */}
-          <span className="pointer-events-none absolute left-4 top-0 bottom-0 border-l border-neutral-200 dark:border-neutral-800" />
-          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-px w-2 bg-neutral-300 dark:bg-neutral-700" />
+    <section>
+      {/* subtle header */}
+      <h2 className="mb-3 text-xs font-semibold tracking-wider text-neutral-500 dark:text-neutral-400">
+        NEXT MEETING
+      </h2>
 
-          <div className="flex flex-col gap-1 items-start">   {/* <-- add items-start */}
-            <div className="text-sm text-neutral-600 dark:text-neutral-400">
-              {fmt(m.date)}{m.time ? ` · ${m.time}` : ''}
-            </div>
+      <ul className="mt-4">
+        {items.map((m, i) => (
+          <li key={`${m.date}-${i}`} className="relative pl-10 py-4">
+            {/* timeline styling */}
+            <span className="pointer-events-none absolute left-4 top-0 bottom-0 border-l border-neutral-200 dark:border-neutral-800" />
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-px w-2 bg-neutral-300 dark:bg-neutral-700" />
 
-            <Link
-              href="/schedule"
-              className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300 font-medium text-neutral-900 dark:text-neutral-100"
-            >
-              {m.topic}{m.presenter ? ` — ${m.presenter}` : ''}
-            </Link>
-
-            {(m.room || m.links?.length) && (
+            <div className="flex flex-col gap-1 items-start">
               <div className="text-sm text-neutral-600 dark:text-neutral-400">
-                {m.room}
-                {m.room && m.links?.length ? ' · ' : ''}
-
-                {m.links?.map((l, j) => (
-                  <span key={l.href + j}>
-                    <a
-                      href={l.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300"
-                    >
-                      {/* assume labels are clean, e.g., 'Paper 1' */}
-                      {l.label}
-                    </a>
-                    {j < (m.links?.length ?? 0) - 1 ? ', ' : ''}
-                  </span>
-                ))}
+                {fmt(m.date)}{m.time ? ` · ${m.time}` : ''}
               </div>
-            )}
 
-            {m.note && (
-              <div className="text-sm text-neutral-500 dark:text-neutral-400">
-                {m.note}
-              </div>
-            )}
-          </div>
-        </li>
-      ))}
-    </ul>
+              <Link
+                href="/schedule"
+                className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300 font-medium text-neutral-900 dark:text-neutral-100"
+              >
+                {m.topic}{m.presenter ? ` — ${m.presenter}` : ''}
+              </Link>
+
+              {(m.room || m.links?.length) && (
+                <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                  {m.room}
+                  {m.room && m.links?.length ? ' · ' : ''}
+
+                  {m.links?.map((l, j) => (
+                    <span key={l.href + j}>
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300"
+                      >
+                        {l.label}
+                      </a>
+                      {j < (m.links?.length ?? 0) - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {m.note && (
+                <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {m.note}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
