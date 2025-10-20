@@ -47,15 +47,17 @@ export default function SchedulePage() {
             {m.room}
             {m.room && m.links?.length ? ' · ' : ''}
             {m.links?.map((l, j) => (
-              <a
-                key={l.href + j}
-                href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300"
-              >
-                {l.label}
-              </a>
+              <span key={l.href + j}>
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300"
+                >
+                  {l.label}
+                </a>
+                {j < m.links.length - 1 ? ', ' : ''}
+              </span>
             ))}
           </div>
         )}

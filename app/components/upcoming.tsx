@@ -1,10 +1,11 @@
 // app/components/upcoming.tsx
+import Link from 'next/link'
 import { schedule } from 'app/schedule/data'
 
-function formatDate(iso: string) {
-  // Hydration-safe, fixed TZ formatting
+function fmt(iso: string) {
   const d = new Date(iso + 'T12:00:00Z')
   return new Intl.DateTimeFormat('en-GB', {
+    weekday: 'short',
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -12,50 +13,87 @@ function formatDate(iso: string) {
   }).format(d)
 }
 
+function todayISOInTZ(tz: string) {
+  const now = new Date()
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: tz,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now)
+
+  const y = parts.find(p => p.type === 'year')!.value
+  const m = parts.find(p => p.type === 'month')!.value
+  const d = parts.find(p => p.type === 'day')!.value
+  return `${y}-${m}-${d}`
+}
+
 export function Upcoming({ limit = 1 }: { limit?: number }) {
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayISOInTZ('Europe/Paris')
+
   const items = [...schedule]
-    .filter((m) => m.date >= today)
+    .filter(m => m.date >= today)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, limit)
 
   if (items.length === 0) {
     return (
-      <div className="text-sm text-neutral-600 dark:text-neutral-400">
-        No upcoming meetings yet.
-      </div>
+      <p className="text-sm text-neutral-600 dark:text-neutral-400">
+        No upcoming meetings.
+      </p>
     )
   }
 
-  const next = items[0]
-
   return (
-    <div>
-      <h2 className="mt-4 text-sm font-semibold uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
-        Next meeting
-      </h2>
+    <ul className="mt-6">
+      {items.map((m, i) => (
+        <li key={`${m.date}-${i}`} className="relative pl-10 py-4">
+          {/* timeline styling */}
+          <span className="pointer-events-none absolute left-4 top-0 bottom-0 border-l border-neutral-200 dark:border-neutral-800" />
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-px w-2 bg-neutral-300 dark:bg-neutral-700" />
 
-      <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
-        <li key={`${next.date}-${next.topic}`} className="py-3">
-          <div className="text-sm text-neutral-600 dark:text-neutral-400">
-            {formatDate(next.date)}
-            {next.time ? ` · ${next.time}` : ''}
-          </div>
-          <div className="font-medium text-neutral-900 dark:text-neutral-100">
-            {next.topic}
-            {next.presenter ? ` — ${next.presenter}` : ''}
-          </div>
-          {(next.room || next.links?.length) && (
+          <div className="flex flex-col gap-1 items-start">   {/* <-- add items-start */}
             <div className="text-sm text-neutral-600 dark:text-neutral-400">
-              {next.room}
-              {next.room && next.links?.length ? ' · ' : ''}
-              {next.links?.map((l, i) => (
-                <span key={l.href + i}>{l.label}</span>
-              ))}
+              {fmt(m.date)}{m.time ? ` · ${m.time}` : ''}
             </div>
-          )}
+
+            <Link
+              href="/schedule"
+              className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300 font-medium text-neutral-900 dark:text-neutral-100"
+            >
+              {m.topic}{m.presenter ? ` — ${m.presenter}` : ''}
+            </Link>
+
+            {(m.room || m.links?.length) && (
+              <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                {m.room}
+                {m.room && m.links?.length ? ' · ' : ''}
+
+                {m.links?.map((l, j) => (
+                  <span key={l.href + j}>
+                    <a
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="border-b border-transparent hover:border-neutral-400 dark:hover:border-neutral-300"
+                    >
+                      {/* assume labels are clean, e.g., 'Paper 1' */}
+                      {l.label}
+                    </a>
+                    {j < m.links.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {m.note && (
+              <div className="text-sm text-neutral-500 dark:text-neutral-400">
+                {m.note}
+              </div>
+            )}
+          </div>
         </li>
-      </ul>
-    </div>
+      ))}
+    </ul>
   )
 }
