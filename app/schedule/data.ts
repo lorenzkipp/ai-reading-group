@@ -23,7 +23,7 @@ export const schedule: Meeting[] = [
   {
     date: '2025-10-30',
     time: '17:00–18:00',
-    room: 'Sciences Po, Room TBC',
+    room: 'Sciences Po, 28 Rue des Saints-Pères, Room H202B',
     topic: 'Meeting 1',
     presenter: '',
     links: [
