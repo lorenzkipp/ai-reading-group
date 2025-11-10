@@ -30,4 +30,14 @@ export const schedule: Meeting[] = [
       {label: 'Paper 1', href: 'https://academic.oup.com/qje/article/138/3/1349/7076890'}, 
       {label: 'Paper 2', href: 'https://www.aeaweb.org/articles?id=10.1257/jep.33.2.3'}],
   },
+    {
+    date: '2025-11-13',
+    time: '16:00–17:00',
+    room: 'PSE, Room TBC',
+    topic: 'Meeting 2',
+    presenter: '',
+    links: [
+      {label: 'Paper 1', href: 'https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf'}, 
+      {label: 'Paper 2', href: 'https://fabianroeben.com/papers/TMT.pdf'}],
+  },
 ]
