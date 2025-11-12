@@ -33,7 +33,7 @@ export const schedule: Meeting[] = [
     {
     date: '2025-11-13',
     time: '16:00–17:00',
-    room: 'PSE, Room TBC',
+    room: 'PSE, Room R5-10',
     topic: 'Meeting 2',
     presenter: '',
     links: [
